@@ -1,0 +1,10 @@
+{
+  "source": {"use": "csv", "with": {"path": "examples/csv-to-jsonl/people.csv"}},
+  "transforms": [
+    {"use": "drop-empty", "with": {"field": "name"}},
+    {"use": "select", "with": {"fields": ["name", "city"]}},
+    {"use": "rename", "with": {"fields": {"city": "location"}}}
+  ],
+  "sink": {"use": "jsonl", "with": {"path": "build/people.jsonl"}}
+}
+

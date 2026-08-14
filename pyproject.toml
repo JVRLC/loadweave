@@ -1,15 +1,38 @@
-[project]
-name = "data-loaders"
-version = "0.1.0"
-requires-python = ">=3.10"
-dynamic = ["dependencies"]
-
 [build-system]
-requires = ["setuptools>=64.0", "wheel"]
+requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+[project]
+name = "loadweave"
+version = "0.2.0"
+description = "A small, composable ETL runner for Python"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+authors = [{name = "LoadWeave contributors"}]
+keywords = ["etl", "data-pipeline", "data-engineering", "cli"]
+classifiers = ["Development Status :: 3 - Alpha", "License :: OSI Approved :: MIT License", "Programming Language :: Python :: 3"]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+loadweave = "loadweave.cli:main"
+
+[project.urls]
+Repository = "https://github.com/JVRLC/loadweave"
+Issues = "https://github.com/JVRLC/loadweave/issues"
 
 [tool.setuptools.packages.find]
-include = ["loaders*"]
+include = ["loadweave*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E9", "F"]
