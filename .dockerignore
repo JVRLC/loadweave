@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.mypy_cache/
+.pytest_cache/
+
+# OS
+.DS_Store
+._*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment and secrets
+.env
+.env.prod
+# Development
+requirements-dev.txt
+Makefile
+.claude

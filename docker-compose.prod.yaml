@@ -1,0 +1,168 @@
+services:
+  weather-history-loader:
+    build:
+      context: .
+      target: prod
+    container_name: weather-history-loader
+    env_file:
+      - .env.prod
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh
+    entrypoint: [ "sh", "/wait-for-postgres.sh" ]
+    command: [ "python", "-m", "loaders.weather_loader.history.main" ]
+    restart: unless-stopped
+    profiles:
+      - weather-history
+    networks:
+      - data-warehouse_data_warehouse_network
+
+  weather-daily-loader:
+    build:
+      context: .
+      target: prod
+    container_name: weather-daily-loader
+    env_file:
+      - .env.prod
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh
+    entrypoint: [ "sh", "/wait-for-postgres.sh" ]
+    command: [ "python", "-m", "loaders.weather_loader.daily.main" ]
+    restart: unless-stopped
+    profiles:
+      - weather-daily
+    networks:
+      - data-warehouse_data_warehouse_network
+
+  business-loader:
+    build:
+      context: .
+      target: prod
+    container_name: business-loader
+    env_file:
+      - .env.prod
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh
+    entrypoint: [ "sh", "/wait-for-postgres.sh" ]
+    command: [ "tail", "-f", "/dev/null" ]
+    restart: "no"
+    profiles:
+      - business
+    networks:
+      - data-warehouse_data_warehouse_network
+
+  stock-loader:
+    build:
+      context: .
+      target: prod
+    container_name: stock-loader
+    env_file:
+      - .env.prod
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh
+    entrypoint: [ "sh", "/wait-for-postgres.sh" ]
+    command: [ "tail", "-f", "/dev/null" ]
+    restart: "no"
+    profiles:
+      - stock
+    networks:
+      - data-warehouse_data_warehouse_network
+
+  pc-loader:
+    build:
+      context: .
+      target: prod
+    container_name: pc-loader
+    env_file:
+      - .env.prod
+    mem_limit: 2g
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh
+    entrypoint: [ "sh", "/wait-for-postgres.sh" ]
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PC_PROVIDER
+    command: [ "tail", "-f", "/dev/null" ]
+    restart: "no"
+    profiles:
+      - pc
+    networks:
+      - data-warehouse_data_warehouse_network
+
+  metabarcoding-loader:
+    build:
+      context: .
+      target: prod
+    container_name: metabarcoding-loader
+    env_file:
+      - .env.prod
+    mem_limit: 4g
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh
+    entrypoint: [ "sh", "/wait-for-postgres.sh" ]
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: [ "tail", "-f", "/dev/null" ]
+    restart: "no"
+    profiles:
+      - metabarcoding
+    networks:
+      - data-warehouse_data_warehouse_network
+
+  sales-pipeline-loader:
+    build:
+      context: .
+      target: prod
+    container_name: sales-pipeline-loader
+    env_file:
+      - .env.prod
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh
+    entrypoint: [ "sh", "/wait-for-postgres.sh" ]
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: [ "tail", "-f", "/dev/null" ]
+    restart: "no"
+    profiles:
+      - sales-pipeline
+    networks:
+      - data-warehouse_data_warehouse_network
+
+  sample-results-loader:
+    build:
+      context: .
+      target: prod
+    container_name: sample-results-loader
+    env_file:
+      - .env.prod
+    volumes:
+      - ./:/app
+      - ./logs:/app/logs
+      - ./wait-for-postgres.sh:/wait-for-postgres.sh
+    entrypoint: [ "sh", "/wait-for-postgres.sh" ]
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: [ "tail", "-f", "/dev/null" ]
+    restart: "no"
+    profiles:
+      - sample-results
+    networks:
+      - data-warehouse_data_warehouse_network
+
+networks:
+  data-warehouse_data_warehouse_network:
+    name: data-warehouse_data_warehouse_network
+    external: true

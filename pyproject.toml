@@ -1,0 +1,15 @@
+[project]
+name = "data-loaders"
+version = "0.1.0"
+requires-python = ">=3.10"
+dynamic = ["dependencies"]
+
+[build-system]
+requires = ["setuptools>=64.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.packages.find]
+include = ["loaders*"]
