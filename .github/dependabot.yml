@@ -1,0 +1,33 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      python-development:
+        dependency-type: development
+    labels: [dependencies, python]
+    commit-message:
+      prefix: "build(deps)"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+    labels: [dependencies, github-actions]
+    commit-message:
+      prefix: "ci(deps)"
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: monthly
+    labels: [dependencies, docker]
+    commit-message:
+      prefix: "build(deps)"
+

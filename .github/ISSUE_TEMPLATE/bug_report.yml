@@ -1,0 +1,42 @@
+name: Bug report
+description: Report reproducible incorrect behavior
+title: "[Bug]: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for helping improve LoadWeave. Please remove secrets and private data.
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Include the expected and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Minimal reproduction
+      description: Provide the smallest configuration and input that reproduce the issue.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: LoadWeave version
+      placeholder: 0.2.0
+    validations:
+      required: true
+  - type: dropdown
+    id: python
+    attributes:
+      label: Python version
+      options: ["3.10", "3.11", "3.12", "3.13", "Other"]
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs
+      render: shell
+

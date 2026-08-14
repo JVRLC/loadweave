@@ -59,5 +59,12 @@ returns a record or `None`; a sink implements `write(records)` and returns the c
 Any string can contain `${ENVIRONMENT_VARIABLE}`. Missing variables fail early. Keep secrets
 outside configuration files and never commit `.env` files.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Licensed under the [MIT License](LICENSE).
+## Community
 
+Read the [roadmap](ROADMAP.md), propose ideas in GitHub Discussions, and check the
+[contribution guide](CONTRIBUTING.md) before opening a pull request. Project decisions follow
+the public [governance model](GOVERNANCE.md) and community interactions follow the
+[Code of Conduct](CODE_OF_CONDUCT.md).
+
+Releases follow Semantic Versioning and are documented in the [changelog](CHANGELOG.md).
+Licensed under the [MIT License](LICENSE).
