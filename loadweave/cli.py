@@ -1,14 +1,22 @@
 from __future__ import annotations
+
 import argparse
 import json
 import sys
 from typing import Any
+
 from loadweave.config import ConfigError, load_config
 from loadweave.pipeline import Pipeline
-from loadweave.registry import SINKS, SOURCES, TRANSFORMS, build
+from loadweave.registry import SINKS, SOURCES, TRANSFORMS, build_sink, build_source, build_transform
+
 
 def create_pipeline(config: dict[str, Any]) -> Pipeline:
-    return Pipeline(build(config["source"], SOURCES), [build(spec, TRANSFORMS) for spec in config.get("transforms", [])], build(config["sink"], SINKS))
+    return Pipeline(
+        build_source(config["source"]),
+        [build_transform(spec) for spec in config.get("transforms", [])],
+        build_sink(config["sink"]),
+    )
+
 
 def parser() -> argparse.ArgumentParser:
     root = argparse.ArgumentParser(prog="loadweave", description="Composable streaming ETL")
@@ -18,6 +26,7 @@ def parser() -> argparse.ArgumentParser:
         command.add_argument("config")
     commands.add_parser("components")
     return root
+
 
 def main(argv: list[str] | None = None) -> int:
     args = parser().parse_args(argv)
@@ -38,6 +47,6 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: {exc}", file=sys.stderr)
         return 2
 
+
 if __name__ == "__main__":
     raise SystemExit(main())
-

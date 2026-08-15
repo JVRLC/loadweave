@@ -20,7 +20,7 @@ CSV / plugin source  ->  select  ->  rename  ->  JSONL / plugin sink
 ## Quick start
 
 ```bash
-python -m pip install -e .
+python -m pip install loadweave
 loadweave run examples/csv-to-jsonl/pipeline.json
 ```
 
@@ -58,6 +58,9 @@ returns a record or `None`; a sink implements `write(records)` and returns the c
 
 Any string can contain `${ENVIRONMENT_VARIABLE}`. Missing variables fail early. Keep secrets
 outside configuration files and never commit `.env` files.
+
+Plugin references import and execute Python code. Only run pipeline configurations and plugins
+from sources you trust.
 
 ## Community
 

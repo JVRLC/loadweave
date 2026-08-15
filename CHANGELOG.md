@@ -9,6 +9,12 @@ All notable changes follow [Keep a Changelog](https://keepachangelog.com/) and r
 
 - Dependabot updates for Python, GitHub Actions, and Docker.
 - Community health files, issue forms, and pull request checklist.
+- CI coverage across Python 3.10–3.13, package validation, CodeQL, and PyPI publishing.
+- Runtime validation for plugin component contracts.
+
+### Changed
+
+- JSONL output is now replaced atomically to avoid corrupt partial files.
 
 ## [0.2.0] - 2026-08-14
 
@@ -21,4 +27,3 @@ All notable changes follow [Keep a Changelog](https://keepachangelog.com/) and r
 
 [Unreleased]: https://github.com/JVRLC/loadweave/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/JVRLC/loadweave/releases/tag/v0.2.0
-

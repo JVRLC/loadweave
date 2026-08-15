@@ -1,28 +1,34 @@
 from __future__ import annotations
+
 import json
 import os
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 _ENV = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}")
+
 
 class ConfigError(ValueError):
     pass
 
+
 def _expand(value: Any) -> Any:
     if isinstance(value, str):
+
         def replace(match: re.Match[str]) -> str:
             name = match.group(1)
             if name not in os.environ:
                 raise ConfigError(f"environment variable {name!r} is not set")
             return os.environ[name]
+
         return _ENV.sub(replace, value)
     if isinstance(value, list):
         return [_expand(item) for item in value]
     if isinstance(value, dict):
         return {key: _expand(item) for key, item in value.items()}
     return value
+
 
 def load_config(path: str | Path) -> dict[str, Any]:
     config_path = Path(path)
@@ -37,5 +43,10 @@ def load_config(path: str | Path) -> dict[str, Any]:
             raise ConfigError(f"missing required key: {required}")
     if not isinstance(value.get("transforms", []), list):
         raise ConfigError("transforms must be a list")
-    return _expand(value)
-
+    expanded = _expand(value)
+    for key in ("source", "sink"):
+        if not isinstance(expanded[key], dict):
+            raise ConfigError(f"{key} must be an object")
+    if not all(isinstance(item, dict) for item in expanded.get("transforms", [])):
+        raise ConfigError("every transform must be an object")
+    return cast(dict[str, Any], expanded)
