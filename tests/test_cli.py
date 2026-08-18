@@ -6,7 +6,7 @@ from loadweave.cli import main
 def test_components_command_lists_builtins(capsys):
     assert main(["components"]) == 0
     output = capsys.readouterr().out
-    assert "sources: csv, jsonl" in output
+    assert "sources: csv, jsonl, odoo" in output
     assert "sinks: jsonl, stdout" in output
 
 

@@ -8,13 +8,14 @@ from loadweave.components import (
     DropEmpty,
     JsonlSink,
     JsonlSource,
+    OdooSource,
     RenameFields,
     SelectFields,
     StdoutSink,
 )
 from loadweave.contracts import Sink, Source, Transform
 
-SOURCES = {"csv": CsvSource, "jsonl": JsonlSource}
+SOURCES = {"csv": CsvSource, "jsonl": JsonlSource, "odoo": OdooSource}
 TRANSFORMS = {"select": SelectFields, "rename": RenameFields, "drop-empty": DropEmpty}
 SINKS = {"jsonl": JsonlSink, "stdout": StdoutSink}
 
