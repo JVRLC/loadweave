@@ -81,9 +81,7 @@ def test_odoo_source_rejects_failed_authentication(monkeypatch):
         def authenticate(self, *_):
             return False
 
-    monkeypatch.setattr(
-        "loadweave.components.xmlrpc.client.ServerProxy", lambda _: CommonProxy()
-    )
+    monkeypatch.setattr("loadweave.components.xmlrpc.client.ServerProxy", lambda _: CommonProxy())
     source = OdooSource("https://odoo.example.com", "demo", "ada", "bad", "res.partner", ["id"])
 
     with pytest.raises(PermissionError, match="authentication failed"):
