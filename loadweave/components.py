@@ -5,6 +5,7 @@ import json
 import os
 import sys
 import tempfile
+import xmlrpc.client
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from pathlib import Path
 from typing import Any, TextIO
@@ -33,6 +34,65 @@ class JsonlSource:
                     if not isinstance(value, dict):
                         raise ValueError(f"{self.path}:{number}: expected a JSON object")
                     yield value
+
+
+class OdooSource:
+    def __init__(
+        self,
+        url: str,
+        database: str,
+        username: str,
+        password: str,
+        model: str,
+        fields: Sequence[str],
+        domain: Sequence[Any] = (),
+        batch_size: int = 500,
+    ) -> None:
+        if batch_size < 1:
+            raise ValueError("batch_size must be greater than zero")
+        if not fields:
+            raise ValueError("fields must contain at least one Odoo field")
+        self.url = url.rstrip("/")
+        self.database = database
+        self.username = username
+        self.password = password
+        self.model = model
+        self.fields = list(fields)
+        self.domain = list(domain)
+        self.batch_size = batch_size
+
+    def read(self) -> Iterator[Record]:
+        common = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/common")
+        uid = common.authenticate(self.database, self.username, self.password, {})
+        if not uid:
+            raise PermissionError("Odoo authentication failed")
+
+        models = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/object")
+        offset = 0
+        while True:
+            records = models.execute_kw(
+                self.database,
+                uid,
+                self.password,
+                self.model,
+                "search_read",
+                [self.domain],
+                {
+                    "fields": self.fields,
+                    "limit": self.batch_size,
+                    "offset": offset,
+                    "order": "id",
+                },
+            )
+            if not isinstance(records, list):
+                raise TypeError("Odoo search_read returned a non-list response")
+            for record in records:
+                if not isinstance(record, dict):
+                    raise TypeError("Odoo search_read returned a non-object record")
+                yield record
+            if len(records) < self.batch_size:
+                break
+            offset += len(records)
 
 
 class SelectFields:

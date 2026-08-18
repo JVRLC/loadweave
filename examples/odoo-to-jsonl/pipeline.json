@@ -1,0 +1,20 @@
+{
+  "source": {
+    "use": "odoo",
+    "with": {
+      "url": "${ODOO_URL}",
+      "database": "${ODOO_DATABASE}",
+      "username": "${ODOO_USERNAME}",
+      "password": "${ODOO_PASSWORD}",
+      "model": "res.partner",
+      "fields": ["id", "name", "email"],
+      "domain": [],
+      "batch_size": 500
+    }
+  },
+  "transforms": [],
+  "sink": {
+    "use": "jsonl",
+    "with": { "path": "build/odoo-partners.jsonl" }
+  }
+}

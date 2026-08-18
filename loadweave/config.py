@@ -7,10 +7,36 @@ from pathlib import Path
 from typing import Any, cast
 
 _ENV = re.compile(r"\$\{([A-Za-z_][A-Za-z0-9_]*)\}")
+_ENV_NAME = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
 
 
 class ConfigError(ValueError):
     pass
+
+
+def load_dotenv(path: str | Path = ".env") -> None:
+    env_path = Path(path)
+    if not env_path.exists():
+        return
+    try:
+        lines = env_path.read_text(encoding="utf-8").splitlines()
+    except OSError as exc:
+        raise ConfigError(f"cannot load {env_path}: {exc}") from exc
+
+    for number, original in enumerate(lines, 1):
+        line = original.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[7:].lstrip()
+        name, separator, value = line.partition("=")
+        name = name.strip()
+        if not separator or not _ENV_NAME.fullmatch(name):
+            raise ConfigError(f"{env_path}:{number}: invalid environment assignment")
+        value = value.strip()
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in "\"'":
+            value = value[1:-1]
+        os.environ.setdefault(name, value)
 
 
 def _expand(value: Any) -> Any:

@@ -1,8 +1,28 @@
 import json
+import os
 
 import pytest
 
-from loadweave.config import ConfigError, load_config
+from loadweave.config import ConfigError, load_config, load_dotenv
+
+
+def test_loads_dotenv_without_overriding_exported_variables(tmp_path, monkeypatch):
+    monkeypatch.setenv("EXISTING", "from-shell")
+    env = tmp_path / ".env"
+    env.write_text('FROM_FILE="hello world"\nEXISTING=from-file\n')
+
+    load_dotenv(env)
+
+    assert os.environ["FROM_FILE"] == "hello world"
+    assert os.environ["EXISTING"] == "from-shell"
+
+
+def test_rejects_invalid_dotenv_line(tmp_path):
+    env = tmp_path / ".env"
+    env.write_text("not an assignment\n")
+
+    with pytest.raises(ConfigError, match="invalid environment assignment"):
+        load_dotenv(env)
 
 
 def test_expands_environment_variables(tmp_path, monkeypatch):

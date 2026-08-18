@@ -4,7 +4,7 @@ from loadweave.registry import build_sink, build_source, resolve
 
 
 def test_unknown_component_lists_choices():
-    with pytest.raises(ValueError, match="built-ins: csv, jsonl"):
+    with pytest.raises(ValueError, match="built-ins: csv, jsonl, odoo"):
         build_source({"use": "missing"})
 
 

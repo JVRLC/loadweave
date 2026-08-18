@@ -5,7 +5,7 @@ import json
 import sys
 from typing import Any
 
-from loadweave.config import ConfigError, load_config
+from loadweave.config import ConfigError, load_config, load_dotenv
 from loadweave.pipeline import Pipeline
 from loadweave.registry import SINKS, SOURCES, TRANSFORMS, build_sink, build_source, build_transform
 
@@ -36,6 +36,7 @@ def main(argv: list[str] | None = None) -> int:
             print("transforms: " + ", ".join(sorted(TRANSFORMS)))
             print("sinks: " + ", ".join(sorted(SINKS)))
             return 0
+        load_dotenv()
         pipeline = create_pipeline(load_config(args.config))
         if args.command == "check":
             print(f"valid: {args.config}")
